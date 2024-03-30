@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "956177558277",
+    "project_id": "vitsllc-assignment",
+    "storage_bucket": "vitsllc-assignment.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:956177558277:android:c62dddfb1c10083356a56c",
+        "android_client_info": {
+          "package_name": "com.example.vitsllc_assignment_task"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvYt4Uc4op3I9Zn5UvpIeA75k6Cfv_cy4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
