@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vitsllc_assignment_task/views/create_token.dart';
 import 'package:vitsllc_assignment_task/views/services_list.dart';
 
+import 'tokens_list.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -16,12 +18,20 @@ class HomeScreen extends StatelessWidget {
               navigateTo: CreateTokenScreen(),
             ),
             HomeCard(
+              title: "Create a Users",
+              navigateTo: CreateTokenScreen(),
+            ),
+            HomeCard(
               title: "Add Services",
               navigateTo: ServicesList(),
             ),
             HomeCard(
               title: "My Reports",
               navigateTo: ServicesList(),
+            ),
+            HomeCard(
+              title: "Token List",
+              navigateTo: TokenList(),
             ),
           ],
         ),

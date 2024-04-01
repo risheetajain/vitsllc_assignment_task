@@ -25,20 +25,17 @@ class _PhoneOTPVerificationState extends State<PhoneOTPVerification> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Firebase Phone OTP Authentication"),
+        title: const Text("Login/Signup"),
       ),
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            inputTextField("Contact Number", phoneNumber, context),
-            visible
-                ? inputTextField("OTP", otp, context)
-                : const SizedBox.shrink(),
-            !visible ? sendOTPButton("Send OTP") : submitOTPButton("Submit"),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          inputTextField("Contact Number", phoneNumber, context),
+          visible
+              ? inputTextField("OTP", otp, context)
+              : const SizedBox.shrink(),
+          !visible ? sendOTPButton("Send OTP") : submitOTPButton("Submit"),
+        ],
       ),
     );
   }
