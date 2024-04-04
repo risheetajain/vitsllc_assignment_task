@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vitsllc_assignment_task/constants/collection_string.dart';
 import 'package:vitsllc_assignment_task/constants/constant_list.dart';
+import 'package:vitsllc_assignment_task/constants/decoration.dart';
 import 'package:vitsllc_assignment_task/models/token_models.dart';
 import 'package:vitsllc_assignment_task/services/firestore_services.dart';
 import 'package:vitsllc_assignment_task/views/common_widgets/custom_button.dart';
@@ -21,7 +22,8 @@ class _CreateTokenScreenState extends State<CreateTokenScreen> {
   TextEditingController vehicleNo = TextEditingController();
   TextEditingController vehicleType = TextEditingController();
   TextEditingController userMobileNumber = TextEditingController();
-  String? serviceSelected;
+  Map<String, dynamic>? serviceSelected;
+  String? serviceSelectedID;
 
   getSequentialNumber() async {
     final futures = await Future.wait<QuerySnapshot<Map<String, dynamic>>>([
@@ -37,7 +39,7 @@ class _CreateTokenScreenState extends State<CreateTokenScreen> {
   @override
   void initState() {
     getSequentialNumber();
-    FirestoreServices.getCollection(CollectionString.tokenCollection)
+    FirestoreServices.getCollection(CollectionString.servicesCollection)
         .then((value) {
       List.generate(value.docs.length, (index) {
         final myIndexData = value.docs[index].data();
@@ -49,6 +51,7 @@ class _CreateTokenScreenState extends State<CreateTokenScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(serviceSelected);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create Token"),
@@ -80,18 +83,26 @@ class _CreateTokenScreenState extends State<CreateTokenScreen> {
               hintText: "User Mobile No.",
               controller: userMobileNumber,
             ),
-            DropdownButtonFormField<String>(
+            const SizedBox(
+              height: 12,
+            ),
+            DropdownButtonFormField<Map<String, dynamic>>(
                 items: myServicesList
-                    .map((e) => DropdownMenuItem<String>(
-                          value: e["title"],
+                    .map((e) => DropdownMenuItem<Map<String, dynamic>>(
+                          value: e,
                           child: Text(e["title"] ?? ""),
                         ))
                     .toList(),
+                decoration: inputdecoration(context).copyWith(
+                    hintText: "Select Services", labelText: "Select Services"),
                 onChanged: (val) {
                   setState(() {
                     serviceSelected = val;
                   });
                 }),
+            const SizedBox(
+              height: 20,
+            ),
             CustomButton(
                 title: "Create Token",
                 onPressed: () {
@@ -99,10 +110,13 @@ class _CreateTokenScreenState extends State<CreateTokenScreen> {
                     Fluttertoast.showToast(msg: "Please select service");
                     return;
                   }
+
                   FirestoreServices.addData(
                           collection: CollectionString.tokenCollection,
                           myData: TokenModel(
-                                  service: serviceSelected!,
+                                  id: "",
+                                  service: serviceSelected!["title"],
+                                  serviceId: serviceSelected!["id"],
                                   status: StatusService.Waiting.name,
                                   tokenNo: tokenNo.text,
                                   jobNo: jobNo.text,
@@ -112,8 +126,7 @@ class _CreateTokenScreenState extends State<CreateTokenScreen> {
                                   createdAt: DateTime.now())
                               .toJson())
                       .then((_) {
-                    Fluttertoast.showToast(
-                        msg: "Token Generatwed SUccessfully");
+                    Fluttertoast.showToast(msg: "Token Generated SUccessfully");
                     getSequentialNumber();
                   });
                 })

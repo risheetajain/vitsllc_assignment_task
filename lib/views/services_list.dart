@@ -149,7 +149,8 @@ class _AddNewServicesState extends State<AddNewServices> {
                         myData: {
                           "title": controller.text,
                           "status": service!.name,
-                          "description": descriptionCont.text
+                          "description": descriptionCont.text,
+                          "image": ""
                         }).then((_) {
                       Fluttertoast.showToast(
                           msg: "Services Created Successfully");

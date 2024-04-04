@@ -18,3 +18,4 @@ class SharedPref {
 }
 
 String loginStatus = "loginStatus";
+String userHiveBox = "userHiveBox";

@@ -1,20 +1,31 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:vitsllc_assignment_task/constants/collection_string.dart';
-import 'package:vitsllc_assignment_task/models/token_models.dart';
 import 'package:vitsllc_assignment_task/services/firestore_services.dart';
+import 'package:vitsllc_assignment_task/views/login_signup.dart';
 
+import '../constants/collection_string.dart';
+import '../models/token_models.dart';
 import 'common_widgets/widgets.dart';
 import 'services_details_screen.dart';
 
-class TokenList extends StatelessWidget {
-  const TokenList({super.key});
+class UserHomeScreen extends StatelessWidget {
+  const UserHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Services We Provide"),
+        title: const Text("User Home Screen"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PhoneOTPVerification(),
+                    ));
+              },
+              icon: const Icon(Icons.logout))
+        ],
       ),
       body: SingleChildScrollView(
         // scrollDirection: Axis.horizontal,
@@ -24,8 +35,7 @@ class TokenList extends StatelessWidget {
           child: StreamBuilder(
             stream: FirestoreServices.collectionStream(
                 CollectionString.tokenCollection),
-            builder: (BuildContext context,
-                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
                   return const CircularProgressIndicator.adaptive();
@@ -35,32 +45,40 @@ class TokenList extends StatelessWidget {
                 case ConnectionState.done:
                   return Table(
                     border: TableBorder.all(),
-                    children: List.generate(
-                        (snapshot.data?.docs.length ?? 0) + 1, (index) {
+                    children:
+                        List.generate(snapshot.data.docs.length + 1, (index) {
                       if (index == 0) {
                         return TableRow(children: [
                           tableHeading(
                             "Token No.",
                           ),
-                          tableHeading(
-                            "Job No.",
-                          ),
-                          tableHeading(
-                            "Vehicle Type",
-                          ),
+                          // Text(
+                          //   "Job No.",
+                          //   style: TextStyle(
+                          //       fontSize: 18, fontWeight: FontWeight.w500),
+                          // ),
+                          // Text(
+                          //   "Vehicle Type",
+                          //   style: TextStyle(
+                          //       fontSize: 18, fontWeight: FontWeight.w500),
+                          // ),
                           tableHeading(
                             "Vehicle No.",
                           ),
-                          tableHeading(
-                            "Status",
-                          ),
+                          // Text(
+                          //   "Status",
+                          //   style: TextStyle(
+                          //       fontSize: 18, fontWeight: FontWeight.w500),
+                          // ),
                           tableHeading(
                             "Services",
                           ),
+                          tableHeading("Time")
                         ]);
                       } else {
                         final myIndexData = TokenModel.fromJson(
-                            snapshot.data?.docs[index - 1].data() ?? {});
+                            snapshot.data.docs[index - 1].data()
+                                as Map<String, dynamic>);
                         return TableRow(children: [
                           TableRowInkWell(
                               onTap: () {
@@ -68,18 +86,16 @@ class TokenList extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                         builder: (cotext) => TokenDetailScreen(
+                                              tokenModel: myIndexData,
                                               docId: snapshot.data
                                                       ?.docs[index - 1].id ??
                                                   "",
-                                              tokenModel: myIndexData,
                                             )));
                               },
                               child: normalRow(myIndexData.tokenNo)),
-                          normalRow(myIndexData.jobNo),
-                          normalRow(myIndexData.vehicleType),
                           normalRow(myIndexData.vehicleNumber),
                           normalRow(myIndexData.status),
-                          normalRow(myIndexData.service),
+                          normalRow(myIndexData.status),
                         ]);
                       }
                     }),

@@ -1,4 +1,5 @@
 class TokenModel {
+  final String id;
   final String tokenNo;
   final String jobNo;
   final String vehicleType;
@@ -7,20 +8,23 @@ class TokenModel {
   final DateTime createdAt;
   final String status;
   final String service;
+  final String serviceId;
 
-  TokenModel({
-    required this.tokenNo,
-    required this.jobNo,
-    required this.vehicleType,
-    required this.vehicleNumber,
-    required this.createdAt,
-    required this.status,
-    required this.userMobile,
-    required this.service,
-  });
+  TokenModel(
+      {required this.tokenNo,
+      required this.jobNo,
+      required this.vehicleType,
+      required this.vehicleNumber,
+      required this.createdAt,
+      required this.status,
+      required this.userMobile,
+      required this.service,
+      required this.serviceId,
+      required this.id});
 
   static TokenModel fromJson(Map<String, dynamic> json) {
     return TokenModel(
+        serviceId: json["service_id"] ?? "",
         service: json["service"] ?? "",
         status: json["status"] ?? "",
         tokenNo: json['token_no'],
@@ -28,6 +32,7 @@ class TokenModel {
         vehicleType: json['vehicle_type'],
         vehicleNumber: json['vehicle_number'],
         userMobile: json['user_mobile'],
+        id: json["id"],
         createdAt: json["created_at"].toDate());
   }
 
@@ -41,6 +46,8 @@ class TokenModel {
     data['created_at'] = createdAt;
     data["status"] = status;
     data["service"] = service;
+    data["service_id"] = serviceId;
+    data["id"] = id;
     return data;
   }
 }

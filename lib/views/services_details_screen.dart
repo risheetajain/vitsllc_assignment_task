@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:vitsllc_assignment_task/controllers/services_start_controller.dart';
 import 'package:vitsllc_assignment_task/models/token_models.dart';
 
+import 'timer_text.dart';
+
 class TokenDetailScreen extends StatefulWidget {
-  const TokenDetailScreen({super.key, required this.tokenModel});
+  const TokenDetailScreen(
+      {super.key, required this.tokenModel, required this.docId});
   final TokenModel tokenModel;
+  final String docId;
 
   @override
   State<TokenDetailScreen> createState() => _TokenDetailScreenState();
@@ -11,6 +17,9 @@ class TokenDetailScreen extends StatefulWidget {
 
 class _TokenDetailScreenState extends State<TokenDetailScreen> {
   bool? isStartService;
+  final ServiceInController controller = Get.put(
+    ServiceInController(),
+  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,10 +36,12 @@ class _TokenDetailScreenState extends State<TokenDetailScreen> {
               userMobile: widget.tokenModel.userMobile,
               createdAt: widget.tokenModel.createdAt,
             ),
-            ElevatedButton(
-                onPressed: () {
-                  
-                }, child: const Text("Start Services"))
+            TimerText(
+              docId: widget.docId,
+              myData: widget.tokenModel.toJson(),
+            ),
+            // ElevatedButton(
+            //     onPressed: () {}, child: const Text("Start Services"))
           ],
         ));
   }
