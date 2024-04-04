@@ -35,7 +35,10 @@ class _HorizontalServiceListState extends State<HorizontalServiceList> {
                             style: TextStyle(color: Colors.black),
                           ),
                         )
-                      : ListView.builder(
+                      : GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3, childAspectRatio: 1),
                           itemCount: snapshot.data.docs.length,
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
@@ -49,7 +52,6 @@ class _HorizontalServiceListState extends State<HorizontalServiceList> {
                                 ));
                               },
                               child: Container(
-                                height: 100,
                                 margin:
                                     const EdgeInsets.symmetric(horizontal: 10),
                                 padding: const EdgeInsets.all(10),
@@ -61,6 +63,7 @@ class _HorizontalServiceListState extends State<HorizontalServiceList> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    Image.asset("assets/services.jpeg"),
                                     Text('Title: ${item["title"]}'),
                                     Text('Status: ${item["status"]}'),
                                     Text('Description: ${item["description"]}'),

@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:vitsllc_assignment_task/constants/collection_string.dart';
@@ -91,7 +90,7 @@ class _PhoneOTPVerificationState extends State<PhoneOTPVerification> {
             print(getUserHomeScreen(myUserData["role"]));
             MainUtils.closeBanner(context);
             HiveFunctions.createUser(myUserData);
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
               builder: (context) {
                 return getUserHomeScreen(myUserData["role"]);
               },
@@ -139,29 +138,4 @@ class _PhoneOTPVerificationState extends State<PhoneOTPVerification> {
           ),
         ),
       );
-}
-
-class FirebaseAuthentication {
-  String phoneNumber = "";
-
-  sendOTP(String phoneNumber) async {
-    this.phoneNumber = phoneNumber;
-    FirebaseAuth auth = FirebaseAuth.instance;
-    ConfirmationResult result = await auth.signInWithPhoneNumber(
-      '+91$phoneNumber',
-    );
-    printMessage("OTP Sent to +91 $phoneNumber");
-    return result;
-  }
-
-  authenticate(ConfirmationResult confirmationResult, String otp) async {
-    UserCredential userCredential = await confirmationResult.confirm(otp);
-    userCredential.additionalUserInfo!.isNewUser
-        ? printMessage("Authentication Successful")
-        : printMessage("User already exists");
-  }
-
-  printMessage(String msg) {
-    debugPrint(msg);
-  }
 }

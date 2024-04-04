@@ -3,6 +3,7 @@ import 'package:vitsllc_assignment_task/views/create_token.dart';
 import 'package:vitsllc_assignment_task/views/services_list.dart';
 
 import 'create_user.dart';
+import 'login_signup.dart';
 import 'tokens_list.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -10,8 +11,22 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: SafeArea(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Home Screen"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PhoneOTPVerification(),
+                    ));
+              },
+              icon: const Icon(Icons.logout))
+        ],
+      ),
+      body: const SafeArea(
         child: Column(
           children: [
             HomeCard(

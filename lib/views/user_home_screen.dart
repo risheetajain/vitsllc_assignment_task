@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:vitsllc_assignment_task/services/firestore_services.dart';
+import 'package:vitsllc_assignment_task/services/hive_services.dart';
 import 'package:vitsllc_assignment_task/views/login_signup.dart';
 
 import '../constants/collection_string.dart';
 import '../models/token_models.dart';
 import 'common_widgets/widgets.dart';
-import 'services_details_screen.dart';
 
-class UserHomeScreen extends StatelessWidget {
+class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({super.key});
 
   @override
+  State<UserHomeScreen> createState() => _UserHomeScreenState();
+}
+
+class _UserHomeScreenState extends State<UserHomeScreen> {
+  Map<String, dynamic> myUserData = {};
+  @override
+  void initState() {
+    myUserData = HiveFunctions.getAllUsers().first;
+    setState(() {});
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print("MY USERDATA $myUserData");
     return Scaffold(
       appBar: AppBar(
         title: const Text("User Home Screen"),
@@ -33,8 +47,10 @@ class UserHomeScreen extends StatelessWidget {
           scrollDirection: Axis.vertical,
           padding: const EdgeInsets.all(18),
           child: StreamBuilder(
-            stream: FirestoreServices.collectionStream(
-                CollectionString.tokenCollection),
+            stream: FirestoreServices.firestore
+                .collection(CollectionString.tokenCollection)
+                .where("user_mobile", isEqualTo: myUserData["phone"])
+                .snapshots(),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
@@ -80,22 +96,11 @@ class UserHomeScreen extends StatelessWidget {
                             snapshot.data.docs[index - 1].data()
                                 as Map<String, dynamic>);
                         return TableRow(children: [
-                          TableRowInkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (cotext) => TokenDetailScreen(
-                                              tokenModel: myIndexData,
-                                              docId: snapshot.data
-                                                      ?.docs[index - 1].id ??
-                                                  "",
-                                            )));
-                              },
-                              child: normalRow(myIndexData.tokenNo)),
+                          normalRow(myIndexData.tokenNo),
                           normalRow(myIndexData.vehicleNumber),
                           normalRow(myIndexData.status),
-                          normalRow(myIndexData.status),
+                          normalRow(
+                              "${(myIndexData.endTime ?? DateTime.now()).difference(myIndexData.startTime ?? DateTime.now()).inMinutes} Minutes"),
                         ]);
                       }
                     }),
